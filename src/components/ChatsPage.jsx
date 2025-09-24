@@ -84,11 +84,17 @@ function ChatsPage() {
   }
 
   const getPlatformColor = (platform) => {
-    return platform === 'twitch' ? 'text-purple-400' : 'text-green-400'
+    if (platform === 'twitch') return 'text-purple-400'
+    if (platform === 'kick') return 'text-green-400'
+    if (platform === 'youtube') return 'text-red-400'
+    return 'text-gray-400'
   }
 
   const getPlatformBg = (platform) => {
-    return platform === 'twitch' ? 'bg-purple-500/20' : 'bg-green-500/20'
+    if (platform === 'twitch') return 'bg-purple-500/20'
+    if (platform === 'kick') return 'bg-green-500/20'
+    if (platform === 'youtube') return 'bg-red-500/20'
+    return 'bg-gray-500/20'
   }
 
   return (
@@ -101,49 +107,7 @@ function ChatsPage() {
               Visualize os chats do Twitch e Kick lado a lado
             </p>
           </div>
-          <button
-            onClick={() => {
-              // Botão DevTools clicado
-              // window.electronAPI disponível
-              
-              // Tentar múltiplas formas
-              try {
-                // Método 1: electronAPI
-                if (window.electronAPI && window.electronAPI.openDevTools) {
-                  // Chamando openDevTools via electronAPI
-                  window.electronAPI.openDevTools()
-                  return
-                }
-                
-                // Método 2: IPC direto
-                if (window.require) {
-                  // Tentando IPC direto
-                  const { ipcRenderer } = window.require('electron')
-                  ipcRenderer.send('open-devtools')
-                  return
-                }
-                
-                // Método 3: Atalho de teclado simulado
-                // Tentando simular atalho de teclado
-                const event = new KeyboardEvent('keydown', {
-                  key: 'i',
-                  code: 'KeyI',
-                  ctrlKey: true,
-                  shiftKey: true,
-                  metaKey: true // Cmd no Mac
-                })
-                document.dispatchEvent(event)
-                
-              } catch (error) {
-                // Erro ao abrir DevTools
-                alert('Erro ao abrir DevTools. Tente usar Cmd+Shift+I')
-              }
-            }}
-            className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition-colors"
-            title="Abrir DevTools"
-          >
-            🔧 DevTools
-          </button>
+          
         </div>
       </div>
 
@@ -277,6 +241,7 @@ function ChatsPage() {
               )}
             </div>
           </div>
+
         </div>
 
         {/* Status da Conexão */}

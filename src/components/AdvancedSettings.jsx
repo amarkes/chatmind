@@ -364,27 +364,6 @@ function AdvancedSettings({ onClose }) {
                 <span className="text-white">Permitir redimensionamento da janela</span>
               </label>
 
-              <label className="flex items-center space-x-3">
-                <input
-                  type="checkbox"
-                  name="alwaysOnTop"
-                  checked={formData.alwaysOnTop}
-                  onChange={handleInputChange}
-                  className="w-5 h-5 text-blue-600 bg-white/10 border-white/30 rounded focus:ring-blue-500 focus:ring-2"
-                />
-                <span className="text-white">Sempre no topo (Always on Top)</span>
-              </label>
-
-              <label className="flex items-center space-x-3">
-                <input
-                  type="checkbox"
-                  name="fullscreen"
-                  checked={formData.fullscreen}
-                  onChange={handleInputChange}
-                  className="w-5 h-5 text-blue-600 bg-white/10 border-white/30 rounded focus:ring-blue-500 focus:ring-2"
-                />
-                <span className="text-white">Iniciar em tela cheia</span>
-              </label>
             </div>
           </div>
 
