@@ -1,0 +1,59 @@
+{
+  "name": "chatmind",
+  "version": "1.0.0",
+  "description": "Uma aplicação para monitorar canais de streaming",
+  "main": "main.js",
+  "scripts": {
+    "dev": "concurrently \"npm run dev:vite\" \"wait-on http://localhost:3000 && npm run dev:electron\"",
+    "dev:vite": "vite",
+    "dev:electron": "NODE_ENV=development electron .",
+    "build": "vite build && electron-builder",
+    "build:vite": "vite build",
+    "start": "electron .",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "twithc",
+    "kick",
+    "chat"
+  ],
+  "author": "Antonio Ma Neto",
+  "license": "MIT",
+  "devDependencies": {
+    "@vitejs/plugin-react": "4.7.0",
+    "autoprefixer": "10.4.21",
+    "concurrently": "9.2.1",
+    "electron": "38.1.2",
+    "electron-builder": "26.0.12",
+    "postcss": "8.5.6",
+    "tailwindcss": "3.4.17",
+    "vite": "6.3.6",
+    "wait-on": "8.0.5"
+  },
+  "build": {
+    "appId": "com.chatmind.app",
+    "productName": "Chat Mind",
+    "directories": {
+      "output": "dist"
+    },
+    "files": [
+      "main.js",
+      "index.html",
+      "package.json"
+    ],
+    "mac": {
+      "category": "public.app-category.utilities"
+    },
+    "win": {
+      "target": "nsis"
+    },
+    "linux": {
+      "target": "AppImage"
+    }
+  },
+  "dependencies": {
+    "react": "19.1.1",
+    "react-dom": "19.1.1",
+    "zustand": "5.0.8"
+  }
+}
