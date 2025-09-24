@@ -7,6 +7,7 @@ const useConfigStore = create(
       // Estado inicial - Canais
       twitchChannel: '',
       kickChannel: '',
+      youtubeChannel: '',
       isConfigured: false,
       
       // Estado inicial - Configurações de janela
@@ -26,26 +27,34 @@ const useConfigStore = create(
       setTwitchChannel: (channel) => 
         set((state) => ({
           twitchChannel: channel,
-          isConfigured: !!(channel || state.kickChannel)
+          isConfigured: !!(channel || state.kickChannel || state.youtubeChannel)
         })),
       
       setKickChannel: (channel) => 
         set((state) => ({
           kickChannel: channel,
-          isConfigured: !!(state.twitchChannel || channel)
+          isConfigured: !!(state.twitchChannel || channel || state.youtubeChannel)
         })),
       
-      setChannels: (twitchChannel, kickChannel) => 
+      setYoutubeChannel: (channel) => 
+        set((state) => ({
+          youtubeChannel: channel,
+          isConfigured: !!(state.twitchChannel || state.kickChannel || channel)
+        })),
+      
+      setChannels: (twitchChannel, kickChannel, youtubeChannel) => 
         set({
           twitchChannel,
           kickChannel,
-          isConfigured: !!(twitchChannel || kickChannel)
+          youtubeChannel,
+          isConfigured: !!(twitchChannel || kickChannel || youtubeChannel)
         }),
       
       clearChannels: () => 
         set({
           twitchChannel: '',
           kickChannel: '',
+          youtubeChannel: '',
           isConfigured: false
         }),
       
@@ -81,6 +90,13 @@ const useConfigStore = create(
         if (!channel) return false
         // Kick channels são alfanuméricos, underscore, hífen, mínimo 3 caracteres
         return /^[a-zA-Z0-9_-]{3,25}$/.test(channel)
+      },
+      
+      isValidYoutubeChannel: (channel) => {
+        if (!channel) return false
+        // YouTube channels podem ser @username ou channel ID (UC...)
+        // Aceita @username (3-30 caracteres) ou channel ID (24 caracteres começando com UC)
+        return /^(@[a-zA-Z0-9_-]{3,30}|UC[a-zA-Z0-9_-]{22})$/.test(channel)
       }
     }),
     {
