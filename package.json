@@ -1,12 +1,12 @@
 {
   "name": "chatmind",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Uma aplicação para monitorar canais de streaming",
   "main": "main.js",
   "scripts": {
     "dev": "concurrently \"npm run dev:vite\" \"wait-on http://localhost:3000 && npm run dev:electron\"",
     "dev:vite": "vite",
-    "dev:electron": "NODE_ENV=development electron .",
+    "dev:electron": "cross-env NODE_ENV=development electron .",
     "build": "vite build && electron-builder",
     "build:vite": "vite build",
     "start": "electron .",
@@ -23,6 +23,7 @@
     "@vitejs/plugin-react": "4.7.0",
     "autoprefixer": "10.4.21",
     "concurrently": "9.2.1",
+    "cross-env": "^10.0.0",
     "electron": "38.1.2",
     "electron-builder": "26.0.12",
     "postcss": "8.5.6",

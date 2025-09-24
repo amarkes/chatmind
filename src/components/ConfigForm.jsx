@@ -24,7 +24,7 @@ function ConfigForm() {
     const { name, value } = e.target
     setFormData(prev => ({
       ...prev,
-      [name]: value.toLowerCase().trim()
+      [name]: name === 'twitch' || name === 'kick' ? value.toLowerCase().trim() : value.trim()
     }))
     
     // Limpar erro quando usuário começar a digitar
@@ -66,6 +66,7 @@ function ConfigForm() {
       // Simular delay de salvamento
       await new Promise(resolve => setTimeout(resolve, 500))
       
+      // Salvar canais
       setChannels(formData.twitch, formData.kick)
       
       // Mostrar feedback de sucesso

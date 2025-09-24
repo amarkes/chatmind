@@ -1,13 +1,11 @@
 import React, { useState } from 'react'
 import useConfigStore from '../store/useConfigStore'
-import useTwitchStats from '../hooks/useTwitchStats'
 import useKickStats from '../hooks/useKickStats'
 
 function Dashboard({ systemInfo }) {
   const { twitchChannel, kickChannel, clearChannels } = useConfigStore()
   
   // Hooks para estatísticas das APIs
-  const twitchStats = useTwitchStats(twitchChannel)
   const kickStats = useKickStats(kickChannel)
 
   // Função para formatar números
@@ -107,58 +105,6 @@ function Dashboard({ systemInfo }) {
           </div>
 
 
-          {/* Estatísticas Twitch */}
-          {twitchChannel && (
-            <div className="glass-card p-4 md:p-6">
-              <div className="flex items-center mb-3 md:mb-4">
-                <span className="text-2xl md:text-3xl mr-2 md:mr-3">🟣</span>
-                <h3 className="text-lg md:text-xl font-semibold text-white">Twitch Stats</h3>
-              </div>
-              {twitchStats.error && twitchStats.error.includes('usando dados simulados') && (
-                <div className="text-xs text-yellow-400 mb-2">
-                  ⚠️ {twitchStats.error}
-                </div>
-              )}
-              <div className="space-y-2 text-sm">
-                {twitchStats.isLoading ? (
-                  <div className="text-blue-400">Carregando...</div>
-                ) : twitchStats.error ? (
-                  <div className="text-red-400">Erro: {twitchStats.error}</div>
-                ) : (
-                  <>
-                    <div className="flex items-center justify-between">
-                      <span className="text-white/80">Seguidores:</span>
-                      <span className="text-purple-400 font-medium">{formatNumber(twitchStats.followers)}</span>
-                    </div>
-                    <div className="flex items-center justify-between">
-                      <span className="text-white/80">Status:</span>
-                      <span className={`font-medium ${twitchStats.isLive ? 'text-green-400' : 'text-gray-400'}`}>
-                        {twitchStats.isLive ? '🔴 Ao Vivo' : '⚫ Offline'}
-                      </span>
-                    </div>
-                    {twitchStats.isLive && (
-                      <>
-                        <div className="flex items-center justify-between">
-                          <span className="text-white/80">Viewers:</span>
-                          <span className="text-green-400 font-medium">{formatNumber(twitchStats.viewers)}</span>
-                        </div>
-                        {twitchStats.title && (
-                          <div className="text-xs text-white/60 truncate" title={twitchStats.title}>
-                            📺 {twitchStats.title}
-                          </div>
-                        )}
-                        {twitchStats.game && (
-                          <div className="text-xs text-white/60">
-                            🎮 {twitchStats.game}
-                          </div>
-                        )}
-                      </>
-                    )}
-                  </>
-                )}
-              </div>
-            </div>
-          )}
 
           {/* Estatísticas Kick */}
           {kickChannel && (
