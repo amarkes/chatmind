@@ -1,8 +1,22 @@
 import React, { useState } from 'react'
 import useConfigStore from '../store/useConfigStore'
+import useTwitchStats from '../hooks/useTwitchStats'
+import useKickStats from '../hooks/useKickStats'
 
 function Dashboard({ systemInfo }) {
   const { twitchChannel, kickChannel, clearChannels } = useConfigStore()
+  
+  // Hooks para estatísticas das APIs
+  const twitchStats = useTwitchStats(twitchChannel)
+  const kickStats = useKickStats(kickChannel)
+
+  // Função para formatar números
+  const formatNumber = (num) => {
+    if (num === null || num === undefined) return 'N/A'
+    if (num >= 1000000) return (num / 1000000).toFixed(1) + 'M'
+    if (num >= 1000) return (num / 1000).toFixed(1) + 'K'
+    return num.toString()
+  }
 
 
   return (
@@ -92,49 +106,107 @@ function Dashboard({ systemInfo }) {
             </div>
           </div>
 
-          {/* Status da Aplicação */}
-          <div className="glass-card p-4 md:p-6">
-            <div className="flex items-center mb-3 md:mb-4">
-              <span className="text-2xl md:text-3xl mr-2 md:mr-3">⚡</span>
-              <h3 className="text-lg md:text-xl font-semibold text-white">Status da Aplicação</h3>
-            </div>
-            <div className="space-y-2">
-              <div className="flex items-center text-green-400">
-                <span className="w-2 h-2 bg-green-400 rounded-full mr-2"></span>
-                Aplicação rodando
-              </div>
-              <div className="flex items-center text-blue-400">
-                <span className="w-2 h-2 bg-blue-400 rounded-full mr-2"></span>
-                Conexão estável
-              </div>
-              <div className="flex items-center text-purple-400">
-                <span className="w-2 h-2 bg-purple-400 rounded-full mr-2"></span>
-                Pronto para usar
-              </div>
-            </div>
-          </div>
 
-          {/* Recursos da Aplicação */}
-          <div className="glass-card p-4 md:p-6">
-            <div className="flex items-center mb-3 md:mb-4">
-              <span className="text-2xl md:text-3xl mr-2 md:mr-3">🚀</span>
-              <h3 className="text-lg md:text-xl font-semibold text-white">Recursos</h3>
+          {/* Estatísticas Twitch */}
+          {twitchChannel && (
+            <div className="glass-card p-4 md:p-6">
+              <div className="flex items-center mb-3 md:mb-4">
+                <span className="text-2xl md:text-3xl mr-2 md:mr-3">🟣</span>
+                <h3 className="text-lg md:text-xl font-semibold text-white">Twitch Stats</h3>
+              </div>
+              {twitchStats.error && twitchStats.error.includes('usando dados simulados') && (
+                <div className="text-xs text-yellow-400 mb-2">
+                  ⚠️ {twitchStats.error}
+                </div>
+              )}
+              <div className="space-y-2 text-sm">
+                {twitchStats.isLoading ? (
+                  <div className="text-blue-400">Carregando...</div>
+                ) : twitchStats.error ? (
+                  <div className="text-red-400">Erro: {twitchStats.error}</div>
+                ) : (
+                  <>
+                    <div className="flex items-center justify-between">
+                      <span className="text-white/80">Seguidores:</span>
+                      <span className="text-purple-400 font-medium">{formatNumber(twitchStats.followers)}</span>
+                    </div>
+                    <div className="flex items-center justify-between">
+                      <span className="text-white/80">Status:</span>
+                      <span className={`font-medium ${twitchStats.isLive ? 'text-green-400' : 'text-gray-400'}`}>
+                        {twitchStats.isLive ? '🔴 Ao Vivo' : '⚫ Offline'}
+                      </span>
+                    </div>
+                    {twitchStats.isLive && (
+                      <>
+                        <div className="flex items-center justify-between">
+                          <span className="text-white/80">Viewers:</span>
+                          <span className="text-green-400 font-medium">{formatNumber(twitchStats.viewers)}</span>
+                        </div>
+                        {twitchStats.title && (
+                          <div className="text-xs text-white/60 truncate" title={twitchStats.title}>
+                            📺 {twitchStats.title}
+                          </div>
+                        )}
+                        {twitchStats.game && (
+                          <div className="text-xs text-white/60">
+                            🎮 {twitchStats.game}
+                          </div>
+                        )}
+                      </>
+                    )}
+                  </>
+                )}
+              </div>
             </div>
-            <div className="space-y-2 text-sm">
-              <div className="text-white/80">
-                ✅ Chat em tempo real
+          )}
+
+          {/* Estatísticas Kick */}
+          {kickChannel && (
+            <div className="glass-card p-4 md:p-6">
+              <div className="flex items-center mb-3 md:mb-4">
+                <span className="text-2xl md:text-3xl mr-2 md:mr-3">🟢</span>
+                <h3 className="text-lg md:text-xl font-semibold text-white">Kick Stats</h3>
               </div>
-              <div className="text-white/80">
-                ✅ Múltiplas plataformas
-              </div>
-              <div className="text-white/80">
-                ✅ Interface responsiva
-              </div>
-              <div className="text-white/80">
-                ✅ Fácil configuração
+              <div className="space-y-2 text-sm">
+                {kickStats.isLoading ? (
+                  <div className="text-blue-400">Carregando...</div>
+                ) : kickStats.error ? (
+                  <div className="text-red-400">Erro: {kickStats.error}</div>
+                ) : (
+                  <>
+                    <div className="flex items-center justify-between">
+                      <span className="text-white/80">Seguidores:</span>
+                      <span className="text-green-400 font-medium">{formatNumber(kickStats.followers)}</span>
+                    </div>
+                    <div className="flex items-center justify-between">
+                      <span className="text-white/80">Status:</span>
+                      <span className={`font-medium ${kickStats.isLive ? 'text-green-400' : 'text-gray-400'}`}>
+                        {kickStats.isLive ? '🔴 Ao Vivo' : '⚫ Offline'}
+                      </span>
+                    </div>
+                    {kickStats.isLive && (
+                      <>
+                        <div className="flex items-center justify-between">
+                          <span className="text-white/80">Viewers:</span>
+                          <span className="text-green-400 font-medium">{formatNumber(kickStats.viewers)}</span>
+                        </div>
+                        {kickStats.title && (
+                          <div className="text-xs text-white/60 truncate" title={kickStats.title}>
+                            📺 {kickStats.title}
+                          </div>
+                        )}
+                        {kickStats.category && (
+                          <div className="text-xs text-white/60">
+                            🎮 {kickStats.category}
+                          </div>
+                        )}
+                      </>
+                    )}
+                  </>
+                )}
               </div>
             </div>
-          </div>
+          )}
         </div>
 
         
