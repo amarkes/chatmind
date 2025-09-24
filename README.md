@@ -103,8 +103,7 @@ Você pode personalizar a aplicação editando:
 Para criar um executável da aplicação:
 
 ```bash
-npm install --save-dev electron-builder
-npm run build
+npm run forge:make
 ```
 
 Os arquivos de distribuição serão criados na pasta `dist/`.

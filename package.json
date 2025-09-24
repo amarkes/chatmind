@@ -7,8 +7,13 @@
     "dev": "concurrently \"npm run dev:vite\" \"wait-on http://localhost:3000 && npm run dev:electron\"",
     "dev:vite": "vite",
     "dev:electron": "cross-env NODE_ENV=development electron .",
-    "build": "vite build && electron-builder",
+    "build": "npm run build:vite && npm run package:electron",
     "build:vite": "vite build",
+    "build:win": "vite build && electron-builder --win --publish=never",
+    "package:electron": "cross-env NODE_ENV=production electron .",
+    "dist": "npm run build:vite && node create-distribution.js",
+    "forge:package": "npm run build:vite && electron-forge package",
+    "forge:make": "npm run build:vite && electron-forge make",
     "start": "electron .",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -20,6 +25,9 @@
   "author": "Antonio Ma Neto",
   "license": "MIT",
   "devDependencies": {
+    "@electron-forge/cli": "^7.9.0",
+    "@electron-forge/maker-squirrel": "^7.9.0",
+    "@electron-forge/maker-zip": "^7.9.0",
     "@vitejs/plugin-react": "4.7.0",
     "autoprefixer": "10.4.21",
     "concurrently": "9.2.1",
@@ -31,25 +39,29 @@
     "vite": "6.3.6",
     "wait-on": "8.0.5"
   },
-  "build": {
-    "appId": "com.chatmind.app",
-    "productName": "Chat Mind",
-    "directories": {
-      "output": "dist"
-    },
-    "files": [
-      "main.js",
-      "index.html",
-      "package.json"
-    ],
-    "mac": {
-      "category": "public.app-category.utilities"
-    },
-    "win": {
-      "target": "nsis"
-    },
-    "linux": {
-      "target": "AppImage"
+  "config": {
+    "forge": {
+      "packagerConfig": {
+        "name": "ChatMind",
+        "executableName": "ChatMind",
+        "appBundleId": "com.chatmind.app",
+        "appCategoryType": "public.app-category.utilities",
+        "osxSign": false,
+        "osxNotarize": false
+      },
+      "makers": [
+        {
+          "name": "@electron-forge/maker-zip",
+          "platforms": ["win32", "darwin", "linux"]
+        },
+        {
+          "name": "@electron-forge/maker-squirrel",
+          "config": {
+            "name": "ChatMind",
+            "setupExe": "ChatMind-Setup.exe"
+          }
+        }
+      ]
     }
   },
   "dependencies": {
