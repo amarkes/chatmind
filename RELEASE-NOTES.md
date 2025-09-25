@@ -28,12 +28,7 @@
 - Indicadores visuais de status dos canais
 - Layout responsivo para diferentes tamanhos de tela
 
-### ⚙️ Tecnologias
-- **Frontend:** React 19 + Vite
-- **Desktop:** Electron 38
-- **Styling:** Tailwind CSS
-- **State Management:** Zustand
-- **Build System:** Electron Forge
+
 
 ## 🛠️ Requisitos do Sistema
 
